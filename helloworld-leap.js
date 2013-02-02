@@ -1,63 +1,61 @@
 // SMITH Hello World app for the Leap Motion device
 
-var ws;
 
-// Check for both WebSocket and MozWebSocket objects
-if((typeof(WebSocket) == 'undefined') && (typeof(MozWebSocket) != 'undefined') ) {
-  WebSocket = MozWebSocket;
-}
-
-
-// Create the socket with handlers
 function init() {
   
-  // Create and open the socket
-  ws = new WebSocket('ws://localhost:6437/');
-  
-  // On succcessful connection
-  ws.onopen = function(event) {
-    //
-  };
-  
-  // On socket message recevied
-  ws.onmessage = function(event) {
-    
-  };
-  
-  // On socket close
-  ws.onclose = function(event) {
-    
-  };
-  
-  // On socket error
-  ws.onerror = function(event) {
-     
+  var pausedFrame = null;
+  window.onkeypress = function(e) {
+    if (e.charCode == 32) {
+      if (pausedFrame == null) {
+        pausedFrame = latestFrame
+      } else {
+        pausedFrame = null;
+      }
+    }
   }
+        
+  var container = $("#container");
+  var hands = 0;
+  var handsData;
+  var handsDOM = $("#hands .count");
+  var hand1 = $("#hand1");
   
+  var fingers = {};
+  var spheres = {};
+  
+  Leap.loop(function(frame){    
+    if(!pausedFrame) {
+      
+      // Calculate hands
+      hands = 0;
+      for (var k in frame.handsMap) {
+        if(frame.handsMap.hasOwnProperty(k)) {
+          hands++;
+        }
+      }
+      // Output hand count
+      handsDOM.html(frame.pointables.length);
+      
+      // Get finger data
+      var fingerIds = {};
+      var handIds = {};
+      for (var pointableId = 0, pointableCount = frame.pointables.length ; pointableId != pointableCount ; pointableId++ ) {
+        if(pointableId == 0) {
+          finger = frame.pointables[pointableId];
+          console.log(finger.tipPosition[1]);
+          hand1.css('width', finger.tipPosition[1]+'px');
+        }
+      }
+      
+      // Change div width based on hand height from camera
+/*
+      if(hands > 1) {
+        hand1DOM.css('width', hand1.palmPosition[1]);
+      }
+*/
+      
+    }
+  }); 
 }
 
-// Create the socket with event handlers
-function init() {
-  //Create and open the socket
-  ws = new WebSocket("ws://localhost:6437/");
-  
-  // On successful connection
-  ws.onopen = function(event) {
-    document.getElementById("main").style.visibility = "visible";
-    document.getElementById("connection").innerHTML = "WebSocket connection open!";
-  };
-  
-  // On message received
-  ws.onmessage = function(event) {
-    var obj = JSON.parse(event.data);
-    var str = JSON.stringify(obj, undefined, 2);
-    document.getElementById("output").innerHTML = '<pre>' + str + '</pre>';
-  };
-  
-  // On socket close
-  ws.onclose = function(event) {
-    ws = null;
-    document.getElementById("main").style.visibility = "hidden";
-    document.getElementById("connection").innerHTML = "WebSocket connection closed";
-  }
-}
+$(document).ready(init);

@@ -8,21 +8,33 @@
   
   <!-- Scripts -->
   <script src='libs/jquery-1.9.0.min.js' type='text/javascript' charset='utf-8'></script>
-  <script src='libs/processing-1.4.1.min.js' type='text/javascript' charset='utf-8'></script>
+  <!-- <script src='libs/processing-1.4.1.min.js' type='text/javascript' charset='utf-8'></script> -->
+  <script src="libs/leapjs/leap.js" type="text/javascript" charset="utf-8"></script>
   
   <script src='helloworld-leap.js' type='text/javascript' charset='utf-8'></script>
 
 </head>
 <body>
   
+  <h1>Leap Motion - Hello World</h1>
   
   <div id="status">
     Status: <span class="dot"></span>
   </div>
   
-  <div id="containter">
+  <div id="hands">
+    Hands: <span class="count"></span>
+    
+    <div id="hand1"></div>
+    <div id="hand2"></div>
     
   </div>
+  
+  
+  
+  <pre id="container">
+    
+  </pre>
   
 </body>
 </html>
